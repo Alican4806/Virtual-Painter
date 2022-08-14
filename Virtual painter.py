@@ -11,7 +11,7 @@ wCam,hCam = 1280,720
 get.set(3,wCam)
 get.set(4,hCam)
 brushThickness = 10
-eraserThickness = 30
+eraserThickness =50
 ##It is access Folder which include images.##
 folderPath = 'Colors for pointer'
 
@@ -26,7 +26,7 @@ xp , yp = 0, 0
 
 
 header =overlayList[6]    
-drawColor =(255,255,255)
+drawColor =(0,0,0)
 # print(overlayList)   
 # print(overlayList[0].shape)
 detector = htm.handDetector()
@@ -72,19 +72,19 @@ while True:
                     drawColor = (0,0,255) # The colors are selected
                 elif (wCam/6) < x2 <(wCam/3):
                     header = overlayList[1]
-                    drawColor = (0,0,0)
+                    drawColor = (1,1,1) # For black color
                 elif (wCam/6) < x2 <(wCam/2):
                     header = overlayList[2]
-                    drawColor = (255,0,0)
+                    drawColor = (255,0,0)# For blue color
                 elif (wCam/2) < x2 <(2*wCam/3):
                     header = overlayList[3]
-                    drawColor = (0,255,255)
+                    drawColor = (0,255,255)# For yellow color
                 elif (2*wCam/3) < x2 <(5*wCam/6):
                     header = overlayList[4]
-                    drawColor = (0,255,0)
+                    drawColor = (0,255,0)# For green color
                 elif (5*wCam/6) < x2 <wCam:
                     header = overlayList[5]
-                    drawColor = (255,255,255)
+                    drawColor = (0,0,0)# For color of the eraser
             cv.rectangle(img,(x1-5,y1+10),(x2+5,y2-10),drawColor,cv.FILLED)   # Selection mode is shown as rectangle.
                 
         # 5-) If drawing mode - index finger is up    
@@ -95,7 +95,7 @@ while True:
             if xp == 0 and xp == 0: 
                 xp , yp = x1 , y1
                 
-            if drawColor == (255,255,255):
+            if drawColor == (0,0,0):
                 cv.line(img,(xp,yp),(x1,y1),drawColor,eraserThickness)
                 cv.line(canvas,(xp,yp),(x1,y1),drawColor,eraserThickness)
 
@@ -106,9 +106,9 @@ while True:
             
             
             xp , yp = x1 , y1 # The line is not continuous due to this expression.
-    
+    # Last of all, the drawing  is provided
     imgGray = cv.cvtColor(canvas,cv.COLOR_BGR2GRAY)
-    _, imgInv = cv.threshold(imgGray,50,255,cv.THRESH_BINARY_INV)
+    _, imgInv = cv.threshold(imgGray,0,255,cv.THRESH_BINARY_INV)
     imgInv = cv.cvtColor(imgInv,cv.COLOR_GRAY2BGR)
     img = cv.bitwise_and(img,imgInv)
     img = cv.bitwise_or(img,canvas)
@@ -119,24 +119,16 @@ while True:
     img[0:h,0:w] = got        
             
             
-        
-        
-        
-        
+                
     #img = cv.addWeighted(img,0.5,canvas,0.5,0) # These pictures are summed
-    
-    
-    
+       
     
     cv.imshow('image',img)
-    cv.imshow('canvas image',canvas)
-    cv.imshow('Inv',imgInv)
-    
-    
-    
-    
+    # cv.imshow('canvas image',canvas)
+    # cv.imshow('Inv',imgInv)
+            
     if cv.waitKey(1) & 0xFF == ord('a'):
         break
     
-    
+get.release()    
 cv.destroyAllWindows()
